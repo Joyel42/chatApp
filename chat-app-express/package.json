@@ -12,8 +12,11 @@
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
     "jade": "~1.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.3",
     "morgan": "~1.9.1",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "validator": "^13.11.0"
   },
   "description": "ChatApp Backend",
   "main": "app.js",
