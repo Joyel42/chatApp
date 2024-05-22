@@ -4,66 +4,53 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var indexRouter = require('./src/routes/index');
-var usersRouter = require('./src/routes/users');
-var mongoose = require('mongoose');
+var usersRouter = require('./src/routes/user-routes');
 
 var app = express();
 
-require('dotenv').config()
+require('dotenv').config();
 
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000; // Set a default port if PORT environment variable is not set
 const http = require('http');
 const socket = require("socket.io");
 const server = http.createServer(app);
 const io = socket(server);
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+
+var cors = require('cors')
+var dbConnect = require('./src/connect');
+var socketConnect = require('./src/socket')
+
+dbConnect.initiateDBConnection();
+socketConnect.socketConnection(io);
 
 app.use(logger('dev'));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('src/public'));
+
+app.use(cors({
+  origin:'*'
+}))
+
 
 app.use('/api/', indexRouter);
 app.use('/api/users', usersRouter);
 
-// Allowing all orgins 
-app.use(function(req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  res.setHeader('Access-Control-Allow-Credentials', true);
-  next();
-});
-
-// DB connetion
-mongoose.connect(process.env.DBLINK);
-
-io.on('connection', (socket) => {
-  console.log('user connected');
-
-  console.log("Additional Data about the user from the client side =",socket.handshake.query)
-  socket.on('disconnect', function () {
-    console.log('user disconnected');
-  });
-})
-
 server.listen(PORT, function () {
-  console.log(`http://localhost:${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });
+
 server.on('error', onError);
+
 app.use(function (req, res, next) {
   next(createError(404));
 });
 
 app.use(function (err, req, res, next) {
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  res.status(err.status || 500);
-  res.render('error');
+  res.status(err.status || 500).json({
+    message: err.message,
+    error: req.app.get('env') === 'development' ? err : {}
+  });
 });
 
 function onError(error) {

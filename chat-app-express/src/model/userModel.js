@@ -1,13 +1,10 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const validator = require('validator');
-//we will bycrypt the password before saving into model
-const bcrypt = require('bcrypt');
-//constant for holding jwt 
 const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema({
-    userID:{
+    userID: {
         type: String,
         required: [true, 'Please provide an user_id.'],
         unique: true
@@ -19,7 +16,7 @@ const userSchema = new Schema({
         minLength: [3, 'Name should be at least 3 charcheters']
     },
     phone: {
-        type: Number,
+        type: String,
         required: [true, 'Please provide a phone number'],
         unique: true,
         validate: [validator.isMobilePhone, 'Please enter a valid phone number']
@@ -29,21 +26,16 @@ const userSchema = new Schema({
         default: Date.now
     },
     avatar: {
-        public_id: {
-            type: String,
-            required: true
-        },
-        url: {
-            type: String,
-            required: true
-        }
+        type: String,
+        required: true
     },
     role: {
         type: String,
         default: 'user'
-    },
-    resetPasswordToken: String,
-    resetPasswordExpire: Date
+    }
+    // ,
+    // resetPasswordToken: String,
+    // resetPasswordExpire: Date
 });
 
 //generating TOKEN
