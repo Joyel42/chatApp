@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const validator = require('validator');
-const jwt = require('jsonwebtoken');
 
 const userSchema = new Schema({
     userID: {
@@ -25,24 +24,15 @@ const userSchema = new Schema({
         type: Date,
         default: Date.now
     },
-    avatar: {
-        type: String,
-        required: true
-    },
     role: {
         type: String,
         default: 'user'
-    }
-    // ,
+    },
+    avatar: String,
+    status: String
+    // ,,
     // resetPasswordToken: String,
     // resetPasswordExpire: Date
 });
-
-//generating TOKEN
-userSchema.methods.generateToken = (userDeatils) => {
-    return jwt.sign({ id: this._id, role: this.role, name: this.name }, process.env.JWT_SECRET_KEY,
-        { expiresIn: '1h' }
-    )
-}
 
 module.exports = mongoose.model('User', userSchema);
