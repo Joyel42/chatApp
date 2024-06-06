@@ -10,7 +10,7 @@ const multerStorage = multer.diskStorage({
       const ext = file.mimetype.split('/')[1];
       const userId = req.body.userID;
       const filename = userId ? `user-${userId}-${Date.now()}.${ext}` : `${Date.now()}.${ext}`;
-      let avatar = "src/public/images/users/" + filename
+      let avatar = "/images/users/" + filename;
       const result = await User.updateOne({ userID: userId }, { $set: { avatar: avatar } });
       cb(null, filename);
     }

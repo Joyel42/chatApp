@@ -55,7 +55,7 @@ const generateUserId = () => {
 }
 
 const profilePhotoUpdater = (req, res) => {
-  res.send('File uploaded successfully');
+  res.status(201).json({ message:'File uploaded successfully' });
 }
 
 module.exports = { getUsers, userRegister, profilePhotoUpdater };
