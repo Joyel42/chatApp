@@ -2,46 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const User = require('./userModel');
 
-const conversationSchema = new Schema({
-    participants: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    groupName: String,
-    groupIcon: String,
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
-});
-
-// Group Schema
-const groupSchema = new Schema({
-    groupName: {
-        type: String,
-        required: true
-    },
-    members: [{
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    }],
-    groupIcon: String,
-    description: String,
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    updatedAt: {
-        type: Date,
-        default: Date.now
-    }
-});
-
-// Message Schema
 const messageSchema = new Schema({
     conversationId: {
         type: Schema.Types.ObjectId,
@@ -87,8 +47,4 @@ const messageSchema = new Schema({
     }
 });
 
-module.exports = {
-    Conversation: mongoose.model('Conversation', conversationSchema),
-    Group: mongoose.model('Group', groupSchema),
-    Message: mongoose.model('Message', messageSchema)
-};
+module.exports = mongoose.model('Message', messageSchema);
